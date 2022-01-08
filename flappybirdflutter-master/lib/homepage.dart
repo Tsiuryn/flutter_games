@@ -18,9 +18,12 @@ class _HomePageState extends State<HomePage> {
   double height = 0;
   double time = 0;
   double gravity = -4.9; // how strong the gravity is
-  double velocity = 3.5; // how strong the jump is
+  double velocity = 2; // how strong the jump is
   double birdWidth = 0.1; // out of 2, 2 being the entire width of the screen
   double birdHeight = 0.1; // out of 2, 2 being the entire height of the screen
+
+  int score = 0;
+  int maxScore = 10;
 
   // game settings
   bool gameHasStarted = false;
@@ -64,12 +67,13 @@ class _HomePageState extends State<HomePage> {
     for (int i = 0; i < barrierX.length; i++) {
       // keep barriers moving
       setState(() {
-        barrierX[i] -= 0.005;
+        barrierX[i] -= 0.008;
       });
 
       // if barrier exits the left part of the screen, keep it looping
       if (barrierX[i] < -1.5) {
         barrierX[i] += 3;
+        score ++;
       }
     }
   }
@@ -93,9 +97,18 @@ class _HomePageState extends State<HomePage> {
           return AlertDialog(
             backgroundColor: Colors.brown,
             title: Center(
-              child: Text(
-                "G A M E  O V E R",
-                style: TextStyle(color: Colors.white),
+              child: Column(
+                children: [
+                  Text(
+                    "G A M E  O V E R",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  SizedBox(height: 8,),
+                  Text(
+                    "Current score: $score",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ],
               ),
             ),
             actions: [
@@ -115,7 +128,10 @@ class _HomePageState extends State<HomePage> {
               )
             ],
           );
-        });
+        }).whenComplete(() {
+      if(score > maxScore) maxScore = score;
+      score = 0;
+    });
   }
 
   void jump() {
@@ -169,22 +185,6 @@ class _HomePageState extends State<HomePage> {
                       // tap to play
                       MyCoverScreen(gameHasStarted: gameHasStarted),
 
-                      // Builder(
-                      //   builder: (BuildContext context) {
-                      //     for (int i = 0; i < barrierX.length; i++) {
-                      //       for (int ) {
-                      //         return MyBarrier(
-                      //         barrierX: barrierX[i],
-                      //         barrierWidth: barrierWidth,
-                      //         barrierHeight: barrierHeight[i][0],
-                      //         isThisBottomBarrier: false,
-                      //       );
-                      //       }
-                      //     }
-                      //     return Container();
-                      //   },
-                      // ),
-
                       // Top barrier 0
                       MyBarrier(
                         barrierX: barrierX[0],
@@ -232,7 +232,7 @@ class _HomePageState extends State<HomePage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            '0',
+                            score.toString(),
                             style: TextStyle(color: Colors.white, fontSize: 35),
                           ),
                           SizedBox(
@@ -248,7 +248,7 @@ class _HomePageState extends State<HomePage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            '10',
+                            maxScore.toString(),
                             style: TextStyle(color: Colors.white, fontSize: 35),
                           ),
                           SizedBox(
