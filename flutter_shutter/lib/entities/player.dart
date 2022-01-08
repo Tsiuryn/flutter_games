@@ -10,6 +10,7 @@ class Player extends Entity {
     y = 150;
   }
 
+  final double _centerPlayer = 16;
   double _angle = 0;
   double _degree = 0;
   bool isMoveLeft = false;
@@ -22,8 +23,8 @@ class Player extends Entity {
   @override
   Widget build() {
     return Positioned(
-        top: y,
-        left: x,
+        top: y - _centerPlayer,
+        left: x - _centerPlayer,
         child: visible
             ? Transform.rotate(
                 angle: _angle,
